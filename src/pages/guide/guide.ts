@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { NavController, NavParams } from 'ionic-angular';
 
 @Component({
-  selector: 'page-list',
-  templateUrl: 'list.html'
+  selector: 'page-guide',
+  templateUrl: 'guide.html'
 })
-export class ListPage {
+export class GuidePage {
   selectedItem: any;
   icons: string[];
   items: Array<{title: string, note: string, icon: string}>;
@@ -30,8 +30,11 @@ export class ListPage {
 
   itemTapped(event, item) {
     // That's right, we're pushing to ourselves!
-    this.navCtrl.push(ListPage, {
-      item: item
-    });
+
+    // this.navCtrl.push(GuidePage, {
+    //   item: item
+    // });
+
+    console.log(event, item);
   }
 }
