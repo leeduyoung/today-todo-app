@@ -9,24 +9,36 @@ import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 import { GuidePage } from '../pages/guide/guide';
 import { SettingPage } from '../pages/setting/setting';
+import { SigninPage } from '../pages/sign/signin/signin';
+import { SignupPage } from '../pages/sign/signup/signup';
 
 @NgModule({
   declarations: [
     MyApp,
     HomePage,
     GuidePage,
-    SettingPage
+    SettingPage,
+    SigninPage,
+    SignupPage
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp),
+    IonicModule.forRoot(MyApp, {
+      platforms: {
+        ios: {
+          backButtonText: ''
+        } 
+      }
+    }),
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
     HomePage,
     GuidePage,
-    SettingPage
+    SettingPage,
+    SigninPage,
+    SignupPage
   ],
   providers: [
     StatusBar,

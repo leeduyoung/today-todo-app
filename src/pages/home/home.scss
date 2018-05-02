@@ -5,7 +5,7 @@ page-home {
    }
 
     .home-content {
-        background-color: #F23657;
+        background-color: color($colors, main);
 
         .todo-list-container {
             margin-top: 64px;
@@ -54,7 +54,7 @@ page-home {
                     height: 20px;
                     background-color: white;
                     border-radius: 20px;
-                    border: 2px solid #F23657;
+                    border: 2px solid color($colors, main);;
                     margin-top: 4px;
                 }
                 input[type="checkbox"]:checked:after {
@@ -67,10 +67,9 @@ page-home {
                     position: absolute;
                     top: 4px;
                     left: 0;
-                    border: 2px solid #F23657;
+                    border: 2px solid color($colors, main);;
                     border: 2px solid #bbb;
                     text-align: center;
-                    color: #F23657;
                     color: #bbb;
                 }
                 input[type="checkbox"]:checked + label {
@@ -95,25 +94,15 @@ page-home {
                         height: 30px;
                     }
                     button.activated {
-                        ion-icon.edit {
-                            color: #bbb;
-                        }
-                        ion-icon.delete {
-                            color: #bbb;
-                        }
-                        ion-icon.complete {
+                        ion-icon.edit, ion-icon.delete, ion-icon.complete {
                             color: #bbb;
                         }
                     }
-                    ion-icon.edit {
-                        color: dimgray;
-                    }
-                    ion-icon.delete {
-                        color: dimgray;
+                    ion-icon.edit, ion-icon.delete, ion-icon.complete {
+                        color: rebeccapurple;
                     }
                     ion-icon.complete {
-                        color: dimgray;
-                        font-size: 36px;
+                        font-size: 24px;
                     }
                 }
             }
