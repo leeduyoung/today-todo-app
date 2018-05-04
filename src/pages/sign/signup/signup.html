@@ -25,7 +25,7 @@
       <ion-input type="password" name="password" [(ngModel)]="user.password" min-length="8" required></ion-input>
     </ion-item>
   
-    <button ion-button block color="main" class="signup-button" type="submit">가입하기</button>
+    <button ion-button block color="main" class="signup-button" type="submit" (click)="signup()">가입하기</button>
   </form>
 
 </ion-content>

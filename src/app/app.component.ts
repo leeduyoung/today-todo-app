@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform } from 'ionic-angular';
+import { Nav, Platform, IonicApp, App } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -10,6 +10,7 @@ import { SigninPage } from '../pages/sign/signin/signin';
 
 import * as firebase from 'firebase';
 import { firebaseConfig } from '../config/config';
+import { ToasterProvider } from '../providers/toaster/toaster';
 
 
 @Component({
@@ -19,13 +20,12 @@ export class MyApp {
   @ViewChild(Nav) nav: Nav;
 
   rootPage: any = HomePage;
-
   pages: Array<{title: string, component: any}>;
+  ready: boolean = true;
+  backExitFlag: boolean = false;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private ionicApp: IonicApp, private app: App, private toastProvider: ToasterProvider) {
     this.initializeApp();
-
-    // used for an example of ngFor and navigation
     this.pages = [
       { title: '로그인', component: SigninPage },
       { title: '오늘 할일', component: HomePage },
@@ -37,18 +37,63 @@ export class MyApp {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
       
+      this.hardwareBackHandler();
+      
       firebase.initializeApp(firebaseConfig);
+      firebase.auth().onAuthStateChanged(user => {
+        console.log('onAuthStateChanged: ', user);
+        if(user && user.emailVerified) {
+          this.nav.setRoot(HomePage);
+        }
+        else {
+          this.nav.setRoot(SigninPage);
+        }
+      })
     });
   }
 
   openPage(page) {
-    // Reset the content nav to have just this page
-    // we wouldn't want the back button to show in this scenario
     this.nav.setRoot(page.component);
+  }
+
+  hardwareBackHandler() {
+    let ready: boolean = true;
+
+    this.platform.registerBackButtonAction(() => {
+      let activePortal = this.ionicApp._loadingPortal.getActive() || this.ionicApp._modalPortal.getActive() || this.ionicApp._toastPortal.getActive() || this.ionicApp._overlayPortal.getActive();
+      if (activePortal) {
+        ready = false;
+        activePortal.dismiss();
+        activePortal.onDidDismiss(() => { ready = true; });
+        return;
+      }
+
+      let nav = this.app.getActiveNavs()[0];
+      let currentPage = nav.getActive();
+
+      if (nav.canGoBack()) {
+        if(currentPage.instance instanceof SigninPage) {
+          this.backAsExitApp();
+        }
+      }
+      else {
+        this.backAsExitApp();
+      }
+    });
+  }
+
+  backAsExitApp() {
+    if (!this.backExitFlag) {
+      this.backExitFlag = true;
+      this.toastProvider.show(`한번 더 누르면 앱을 종료합니다.`, `1500`, "bottom", false);
+      setTimeout(() => {
+        this.backExitFlag = false;
+      }, 1200);
+    } else {
+      this.platform.exitApp();
+    }
   }
 }

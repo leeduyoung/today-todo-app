@@ -11,6 +11,8 @@ import { GuidePage } from '../pages/guide/guide';
 import { SettingPage } from '../pages/setting/setting';
 import { SigninPage } from '../pages/sign/signin/signin';
 import { SignupPage } from '../pages/sign/signup/signup';
+import { LoaderProvider } from '../providers/loader/loader';
+import { ToasterProvider } from '../providers/toaster/toaster';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import { SignupPage } from '../pages/sign/signup/signup';
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    LoaderProvider,
+    ToasterProvider
   ]
 })
 export class AppModule {}
