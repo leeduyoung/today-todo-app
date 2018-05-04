@@ -8,6 +8,10 @@ import { GuidePage } from '../pages/guide/guide';
 import { SettingPage } from '../pages/setting/setting';
 import { SigninPage } from '../pages/sign/signin/signin';
 
+import * as firebase from 'firebase';
+import { firebaseConfig } from '../config/config';
+
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -37,6 +41,8 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       this.statusBar.styleDefault();
       this.splashScreen.hide();
+      
+      firebase.initializeApp(firebaseConfig);
     });
   }
 
