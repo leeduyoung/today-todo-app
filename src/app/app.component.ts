@@ -11,6 +11,7 @@ import { SigninPage } from '../pages/sign/signin/signin';
 import * as firebase from 'firebase';
 import { firebaseConfig } from '../config/config';
 import { ToasterProvider } from '../providers/toaster/toaster';
+import { LoaderProvider } from '../providers/loader/loader';
 
 
 @Component({
@@ -24,15 +25,14 @@ export class MyApp {
   ready: boolean = true;
   backExitFlag: boolean = false;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private ionicApp: IonicApp, private app: App, private toastProvider: ToasterProvider) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private ionicApp: IonicApp, private app: App, private toastProvider: ToasterProvider, private loaderProvider: LoaderProvider) {
     this.initializeApp();
     this.pages = [
-      { title: '로그인', component: SigninPage },
       { title: '오늘 할일', component: HomePage },
       { title: '이용안내', component: GuidePage },
       { title: '설정', component: SettingPage }
     ];
-
+    this.loaderProvider.show();
   }
 
   initializeApp() {
@@ -44,7 +44,7 @@ export class MyApp {
       
       firebase.initializeApp(firebaseConfig);
       firebase.auth().onAuthStateChanged(user => {
-        console.log('onAuthStateChanged: ', user);
+        this.loaderProvider.hide();
         if(user && user.emailVerified) {
           this.nav.setRoot(HomePage);
         }

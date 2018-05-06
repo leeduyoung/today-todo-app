@@ -1,8 +1,5 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
     <ion-title>회원가입</ion-title>
   </ion-navbar>
 </ion-header>
@@ -11,21 +8,21 @@
 
   <form #signupForm="ngForm" (ngSubmit)="signup()">
     <ion-item>
-      <ion-label floating>Name</ion-label>
+      <ion-label floating>이름 또는 별명</ion-label>
       <ion-input type="text" name="userName" [(ngModel)]="user.name" required></ion-input>
     </ion-item>
   
     <ion-item>
-      <ion-label floating>Email</ion-label>
+      <ion-label floating>이메일</ion-label>
       <ion-input type="text" name="userEmail" [(ngModel)]="user.email" email required></ion-input>
     </ion-item>
   
     <ion-item>
-      <ion-label floating>Password</ion-label>
-      <ion-input type="password" name="password" [(ngModel)]="user.password" min-length="8" required></ion-input>
+      <ion-label floating>비밀번호</ion-label>
+      <ion-input type="password" name="password" [(ngModel)]="user.password" minlength="8" required></ion-input>
     </ion-item>
   
-    <button ion-button block color="main" class="signup-button" type="submit" (click)="signup()">가입하기</button>
+    <button ion-button block color="main" class="signup-button" type="submit" [disabled]="signupForm.invalid">가입하기</button>
   </form>
 
 </ion-content>

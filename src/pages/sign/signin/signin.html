@@ -8,19 +8,19 @@
 
   <form #siginForm="ngForm" (ngSubmit)="signin()">
     <ion-item>
-      <ion-label floating>Email</ion-label>
+      <ion-label floating>이메일</ion-label>
       <ion-input type="email" name="email" [(ngModel)]="user.email" email required></ion-input>
     </ion-item>
 
     <ion-item>
-      <ion-label floating>Password</ion-label>
+      <ion-label floating>비밀번호</ion-label>
       <ion-input type="password" name="password" [(ngModel)]="user.password" required></ion-input>
     </ion-item>
 
     <button ion-button block color="main" class="signin-button" type="submit" [disabled]="siginForm.invalid">로그인</button>
   </form>
 
-  <button ion-button block color="sub" class="signup-button" (click)="goSignup()">회원가입</button>
-  <button ion-button block color="dark" class="reset-button" (click)="goResetPassword()">비밀번호를 잊으셨나요?</button>
+  <button ion-button block color="main" class="signup-button" (click)="goSignup()">회원가입</button>
+  <button ion-button block color="main" class="reset-button" (click)="goResetPassword()">비밀번호를 잊으셨나요?</button>
 
 </ion-content>

@@ -13,14 +13,15 @@ export class ToasterProvider {
 
   show(message, duration, position, showCloseButton) {
     if(this.toasting)
-      this.toasting.dismiss();
+      this.hide();
 
     this.toasting = this.toastCtrl.create({
       message: message,
       duration: duration,
       position: position,
       showCloseButton: showCloseButton,
-      closeButtonText: '닫기'
+      closeButtonText: '닫기',
+      cssClass: 'zzzzz'
     });
     
     this.toasting.present();
@@ -29,5 +30,6 @@ export class ToasterProvider {
   hide() {
     if(this.toasting)
       this.toasting.dismiss();
+      this.toasting = null;
   }
 }

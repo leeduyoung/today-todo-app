@@ -12,7 +12,7 @@ export class LoaderProvider {
 
   show() {
     if(this.loading)
-      this.loading.dismiss();
+      this.hide();
 
     this.loading = this.loadingCtrl.create({
       spinner: 'dots',
@@ -23,7 +23,9 @@ export class LoaderProvider {
   }
 
   hide() {
-    if(this.loading)
+    if(this.loading) {
       this.loading.dismiss();
+      this.loading = null;
+    }
   }
 }
