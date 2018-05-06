@@ -1,9 +1,13 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
+import { AngularFireModule } from 'angularfire2';
+import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireAuthModule } from 'angularfire2/auth';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { AppVersion } from '@ionic-native/app-version';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -13,7 +17,7 @@ import { SigninPage } from '../pages/sign/signin/signin';
 import { SignupPage } from '../pages/sign/signup/signup';
 import { LoaderProvider } from '../providers/loader/loader';
 import { ToasterProvider } from '../providers/toaster/toaster';
-
+import { firebaseConfig } from '../config/config';
 @NgModule({
   declarations: [
     MyApp,
@@ -25,13 +29,16 @@ import { ToasterProvider } from '../providers/toaster/toaster';
   ],
   imports: [
     BrowserModule,
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFirestoreModule,
+    AngularFireAuthModule,
     IonicModule.forRoot(MyApp, {
       platforms: {
         ios: {
           backButtonText: ''
         } 
       }
-    }),
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [
@@ -45,6 +52,7 @@ import { ToasterProvider } from '../providers/toaster/toaster';
   providers: [
     StatusBar,
     SplashScreen,
+    AppVersion,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     LoaderProvider,
     ToasterProvider

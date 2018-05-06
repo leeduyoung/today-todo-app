@@ -1,12 +1,14 @@
 import { Component } from "@angular/core";
-import { NavController, NavParams, ToastController } from "ionic-angular";
+import { NavController, NavParams } from "ionic-angular";
 import { SignupPage } from "../signup/signup";
 import { User } from "../../../models/user.model";
 
-import * as firebase from "firebase";
+// import * as firebase from "firebase";
 import { ToasterProvider } from "../../../providers/toaster/toaster";
 import { LoaderProvider } from "../../../providers/loader/loader";
 import { HomePage } from "../../home/home";
+import { AngularFireAuth } from "angularfire2/auth";
+import { AngularFirestore, AngularFirestoreCollection } from "angularfire2/firestore";
 
 @Component({
   selector: "page-signin",
@@ -15,7 +17,7 @@ import { HomePage } from "../../home/home";
 export class SigninPage {
   user: User;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private toasterProvider: ToasterProvider, private loaderProvider: LoaderProvider) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private toasterProvider: ToasterProvider, private loaderProvider: LoaderProvider, private angularFireAuth: AngularFireAuth, private angularFirestore: AngularFirestore) {
     this.user = new User();
   }
 
@@ -23,10 +25,15 @@ export class SigninPage {
     console.log("ionViewDidLoad SigninPage");
   }
 
+  ionViewDidLeave() {
+    this.user.email = '';
+    this.user.name = '';
+    this.user.password = '';
+  }
+
   signin() {
     this.loaderProvider.show();
-    firebase
-      .auth()
+    this.angularFireAuth.auth
       .signInWithEmailAndPassword(this.user.email, this.user.password)
       .then(user => {
         console.log(user);
@@ -66,7 +73,19 @@ export class SigninPage {
 
   goSignup() {
     console.log("goSignup");
-    this.navCtrl.push(SignupPage);
+    // this.navCtrl.push(SignupPage);
+    this.angularFirestore.collection("users")
+      .add({
+        email: 'leeduyoung2002@gmail.com',
+        name: '이두영',
+        password: '1234qwer'
+      })
+      .then((docRef: any) => {
+        console.log("Document written with ID: ", docRef.id);
+      })
+      .catch(error => {
+        console.error("Error adding document: ", error);
+      });
   }
 
   goResetPassword() {

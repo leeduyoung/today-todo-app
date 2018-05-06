@@ -18,6 +18,10 @@ export class HomePage {
     this.todoList = [];
   }
 
+  ngOnInit(): void {
+
+  }
+
   addTodo(newText) {
     console.log(newText);
     if(newText) {

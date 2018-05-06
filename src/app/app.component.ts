@@ -8,10 +8,11 @@ import { GuidePage } from '../pages/guide/guide';
 import { SettingPage } from '../pages/setting/setting';
 import { SigninPage } from '../pages/sign/signin/signin';
 
-import * as firebase from 'firebase';
+// import * as firebase from 'firebase';
 import { firebaseConfig } from '../config/config';
 import { ToasterProvider } from '../providers/toaster/toaster';
 import { LoaderProvider } from '../providers/loader/loader';
+import { AngularFireAuth } from 'angularfire2/auth';
 
 
 @Component({
@@ -25,7 +26,7 @@ export class MyApp {
   ready: boolean = true;
   backExitFlag: boolean = false;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private ionicApp: IonicApp, private app: App, private toastProvider: ToasterProvider, private loaderProvider: LoaderProvider) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private ionicApp: IonicApp, private app: App, private toastProvider: ToasterProvider, private loaderProvider: LoaderProvider, private angularFireAuth: AngularFireAuth) {
     this.initializeApp();
     this.pages = [
       { title: '오늘 할일', component: HomePage },
@@ -42,8 +43,17 @@ export class MyApp {
       
       this.hardwareBackHandler();
       
-      firebase.initializeApp(firebaseConfig);
-      firebase.auth().onAuthStateChanged(user => {
+      // firebase.initializeApp(firebaseConfig);
+      // firebase.auth().onAuthStateChanged(user => {
+      //   this.loaderProvider.hide();
+      //   if(user && user.emailVerified) {
+      //     this.nav.setRoot(HomePage);
+      //   }
+      //   else {
+      //     this.nav.setRoot(SigninPage);
+      //   }
+      // });
+      this.angularFireAuth.auth.onAuthStateChanged(user => {
         this.loaderProvider.hide();
         if(user && user.emailVerified) {
           this.nav.setRoot(HomePage);
@@ -51,7 +61,8 @@ export class MyApp {
         else {
           this.nav.setRoot(SigninPage);
         }
-      })
+      });
+
     });
   }
 
@@ -60,14 +71,12 @@ export class MyApp {
   }
 
   hardwareBackHandler() {
-    let ready: boolean = true;
-
     this.platform.registerBackButtonAction(() => {
       let activePortal = this.ionicApp._loadingPortal.getActive() || this.ionicApp._modalPortal.getActive() || this.ionicApp._toastPortal.getActive() || this.ionicApp._overlayPortal.getActive();
       if (activePortal) {
-        ready = false;
+        this.ready = false;
         activePortal.dismiss();
-        activePortal.onDidDismiss(() => { ready = true; });
+        activePortal.onDidDismiss(() => { this.ready = true; });
         return;
       }
 

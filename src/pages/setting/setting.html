@@ -7,6 +7,58 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding>
-  설정 화면
+<ion-content>
+  <div class="content">
+    <div class="item">
+      <span>버전정보</span>
+      <span class="align-right app-version">최신 버전
+        <span class="number">1.7.0</span>
+      </span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="item">
+      <span>푸쉬 알림</span>
+      <span class="align-right">
+        <ion-toggle color="main" [(ngModel)]="pepperoni"></ion-toggle>
+      </span>
+      <span class="align-bottom">
+        오전, 오후 9시에 할일 체크 알림 허용
+      </span>
+    </div>
+    <div class="item">
+      <span>공지사항</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="item">
+      <span>이용약관</span>
+    </div>
+    <div class="item">
+      <span>개인정보 취급방침</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="item">
+      <span>문의하기</span>
+      <span class="align-bottom">불편 또는 개선사항을 말씀해주세요.</span>
+    </div>
+  </div>
+
+  <div class="content">
+    <div tappable class="item" (click)="signout()">
+      <span>로그아웃</span>
+    </div>
+  </div>
 </ion-content>
+
+<!-- 1. 로그아웃 -> 마지막
+2. 푸쉬 알림 토글
+3. 버전 정보 -> 1
+4. 공지사항 -> 2
+5. 이용약관
+6. 개인정보 취급방침
+7. 개발자에게 문의하기 -->
