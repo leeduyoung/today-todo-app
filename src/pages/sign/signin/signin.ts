@@ -41,8 +41,8 @@ export class SigninPage {
           this.toasterProvider.show('이메일 인증 후 로그인해주세요.', 3000, 'center', false);
         }
         else {
-          this.navCtrl.setRoot(HomePage);
-          this.toasterProvider.show(`${user.displayName}님, 반갑습니다. 오늘 하루도 보람찬 하루가 되길 기도합니다!`, 3000, 'center', false);
+          // this.navCtrl.setRoot(HomePage);
+          // this.toasterProvider.show(`${user.displayName}님, 반갑습니다. 오늘 하루도 보람찬 하루가 되길 기도합니다!`, 3000, 'center', false);
         }
         this.loaderProvider.hide();
       })
@@ -73,19 +73,19 @@ export class SigninPage {
 
   goSignup() {
     console.log("goSignup");
-    // this.navCtrl.push(SignupPage);
-    this.angularFirestore.collection("users")
-      .add({
-        email: 'leeduyoung2002@gmail.com',
-        name: '이두영',
-        password: '1234qwer'
-      })
-      .then((docRef: any) => {
-        console.log("Document written with ID: ", docRef.id);
-      })
-      .catch(error => {
-        console.error("Error adding document: ", error);
-      });
+    this.navCtrl.push(SignupPage);
+    // this.angularFirestore.collection("users")
+    //   .add({
+    //     email: 'leeduyoung2002@gmail.com',
+    //     name: '이두영',
+    //     password: '1234qwer'
+    //   })
+    //   .then((docRef: any) => {
+    //     console.log("Document written with ID: ", docRef.id);
+    //   })
+    //   .catch(error => {
+    //     console.error("Error adding document: ", error);
+    //   });
   }
 
   goResetPassword() {

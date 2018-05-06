@@ -13,6 +13,7 @@ import { firebaseConfig } from '../config/config';
 import { ToasterProvider } from '../providers/toaster/toaster';
 import { LoaderProvider } from '../providers/loader/loader';
 import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFirestore } from 'angularfire2/firestore';
 
 
 @Component({
@@ -26,14 +27,14 @@ export class MyApp {
   ready: boolean = true;
   backExitFlag: boolean = false;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private ionicApp: IonicApp, private app: App, private toastProvider: ToasterProvider, private loaderProvider: LoaderProvider, private angularFireAuth: AngularFireAuth) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private ionicApp: IonicApp, private app: App, private toasterProvider: ToasterProvider, private loaderProvider: LoaderProvider, private angularFireAuth: AngularFireAuth, private angularFirestore: AngularFirestore) {
+    this.angularFirestore.firestore.settings({timestampsInSnapshots: true});
     this.initializeApp();
     this.pages = [
       { title: '오늘 할일', component: HomePage },
       { title: '이용안내', component: GuidePage },
       { title: '설정', component: SettingPage }
     ];
-    this.loaderProvider.show();
   }
 
   initializeApp() {
@@ -42,24 +43,16 @@ export class MyApp {
       this.splashScreen.hide();
       
       this.hardwareBackHandler();
-      
-      // firebase.initializeApp(firebaseConfig);
-      // firebase.auth().onAuthStateChanged(user => {
-      //   this.loaderProvider.hide();
-      //   if(user && user.emailVerified) {
-      //     this.nav.setRoot(HomePage);
-      //   }
-      //   else {
-      //     this.nav.setRoot(SigninPage);
-      //   }
-      // });
+
       this.angularFireAuth.auth.onAuthStateChanged(user => {
-        this.loaderProvider.hide();
         if(user && user.emailVerified) {
-          this.nav.setRoot(HomePage);
+          // this.nav.setRoot(HomePage);
+          this.rootPage = HomePage;
+          this.toasterProvider.show(`${user.displayName}님, 반갑습니다. 오늘 하루도 보람찬 하루가 되길 기도합니다!`, 3500, 'center', false);
         }
         else {
-          this.nav.setRoot(SigninPage);
+          this.rootPage = SigninPage;
+          // this.nav.setRoot(SigninPage);
         }
       });
 
@@ -97,7 +90,7 @@ export class MyApp {
   backAsExitApp() {
     if (!this.backExitFlag) {
       this.backExitFlag = true;
-      this.toastProvider.show(`한번 더 누르면 앱을 종료합니다.`, `1500`, "bottom", false);
+      this.toasterProvider.show(`한번 더 누르면 앱을 종료합니다.`, `1500`, "bottom", false);
       setTimeout(() => {
         this.backExitFlag = false;
       }, 1200);
