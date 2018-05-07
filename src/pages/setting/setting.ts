@@ -37,7 +37,7 @@ export class SettingPage {
       })
       .catch(error => {
         console.log(error);
-      });    
+      });
   }
 
   getUserInfo() {
@@ -81,7 +81,7 @@ export class SettingPage {
         {
           text: '예',
           handler: () => {
-            this.loaderProvider.show();
+            // this.loaderProvider.show();
             this.firebaseSignOut();
           }
         }
@@ -89,13 +89,14 @@ export class SettingPage {
     });
     alert.present();
   }
-  
+
   firebaseSignOut() {
     this.angularFireAuth.auth.signOut().then(() => {
       // Sign-out successful.
+      // this.loaderProvider.hide();
     }).catch(error => {
       console.log(error);
-      this.loaderProvider.hide();
+      // this.loaderProvider.hide();
       this.toasterProvider.show(`오류가 발생하였습니다. 잠시후 다시 시도해주세요.(${error.code})`, 3000, 'center', false);
     });
   }

@@ -11,7 +11,7 @@ export class LoaderProvider {
   }
 
   show() {
-    if(this.loading)
+    if (this.loading)
       this.hide();
 
     this.loading = this.loadingCtrl.create({
@@ -23,7 +23,7 @@ export class LoaderProvider {
   }
 
   hide() {
-    if(this.loading) {
+    if (this.loading) {
       this.loading.dismiss();
       this.loading = null;
     }

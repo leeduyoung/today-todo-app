@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { Nav, Platform, IonicApp, App } from 'ionic-angular';
+import { Nav, Platform, IonicApp, App, Events } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 
@@ -8,12 +8,12 @@ import { GuidePage } from '../pages/guide/guide';
 import { SettingPage } from '../pages/setting/setting';
 import { SigninPage } from '../pages/sign/signin/signin';
 
-// import * as firebase from 'firebase';
 import { firebaseConfig } from '../config/config';
 import { ToasterProvider } from '../providers/toaster/toaster';
 import { LoaderProvider } from '../providers/loader/loader';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
+import { GlobalsProvider } from '../providers/globals/globals';
 
 
 @Component({
@@ -27,7 +27,7 @@ export class MyApp {
   ready: boolean = true;
   backExitFlag: boolean = false;
 
-  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private ionicApp: IonicApp, private app: App, private toasterProvider: ToasterProvider, private loaderProvider: LoaderProvider, private angularFireAuth: AngularFireAuth, private angularFirestore: AngularFirestore) {
+  constructor(public platform: Platform, public statusBar: StatusBar, public splashScreen: SplashScreen, private ionicApp: IonicApp, private app: App, private toasterProvider: ToasterProvider, private loaderProvider: LoaderProvider, private angularFireAuth: AngularFireAuth, private angularFirestore: AngularFirestore, private globalsProvider: GlobalsProvider, private events: Events) {
     this.angularFirestore.firestore.settings({timestampsInSnapshots: true});
     this.initializeApp();
     this.pages = [
@@ -44,16 +44,24 @@ export class MyApp {
       
       this.hardwareBackHandler();
 
+      // this.loaderProvider.show();
       this.angularFireAuth.auth.onAuthStateChanged(user => {
-        if(user && user.emailVerified) {
-          // this.nav.setRoot(HomePage);
+        if(user && user.emailVerified) { //signin
+          console.log('signin: ',user);
+          this.events.publish('sign', user, true);
+          this.globalsProvider.setSignStatus(true);
+          this.globalsProvider.setUser({email: user.email, name: user.displayName, password: null});
           this.rootPage = HomePage;
-          this.toasterProvider.show(`${user.displayName}님, 반갑습니다. 오늘 하루도 보람찬 하루가 되길 기도합니다!`, 3500, 'center', false);
+          this.toasterProvider.show(`${user.displayName}님, 반갑습니다. 오늘 하루도 보람찬 하루가 되길 기도합니다!`, 4000, 'center', false);
         }
-        else {
+        else { //signout
+          console.log('signout');
+          this.events.publish('sign', null, false);
+          this.globalsProvider.setSignStatus(false);
+          this.globalsProvider.setUser({email: '', name: '', password: ''});
           this.rootPage = SigninPage;
-          // this.nav.setRoot(SigninPage);
         }
+        // this.loaderProvider.hide();
       });
 
     });

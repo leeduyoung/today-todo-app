@@ -2,10 +2,10 @@ import { Component } from "@angular/core";
 import { NavController, NavParams } from "ionic-angular";
 import { User } from "../../../models/user.model";
 
-// import * as firebase from "firebase";
 import { LoaderProvider } from "../../../providers/loader/loader";
 import { ToasterProvider } from "../../../providers/toaster/toaster";
 import { AngularFireAuth } from "angularfire2/auth";
+import { SigninPage } from "../signin/signin";
 
 @Component({
   selector: "page-signup",
@@ -29,19 +29,12 @@ export class SignupPage {
   }
 
   signup() {
-    this.loaderProvider.show();
+    // this.loaderProvider.show();
     this.angularFireAuth.auth
       .createUserWithEmailAndPassword(this.user.email, this.user.password)
       .then(response => {
         console.log(response);
         this.firebaseUpdateProfile();
-        this.loaderProvider.hide();
-        this.toasterProvider.show(
-          "회원가입 완료! 이메일 인증 후 로그인해주세요.",
-          3000,
-          "center",
-          false
-        );
       })
       .catch(error => {
         console.log(error);
@@ -58,11 +51,10 @@ export class SignupPage {
             errorMessage = "이미 사용되고 있는 이메일주소 입니다.";
             break;
           default:
-            errorMessage =
-              "회원가입에 문제가 발생하였습니다. 잠시후 다시 시도해주세요.";
+            errorMessage = "회원가입에 문제가 발생하였습니다. 잠시후 다시 시도해주세요.";
         }
         this.toasterProvider.show(errorMessage, 3000, "center", false);
-        this.loaderProvider.hide();
+        // this.loaderProvider.hide();
       });
   }
 
@@ -85,26 +77,32 @@ export class SignupPage {
       .currentUser.sendEmailVerification()
       .then(() => {
         console.log("success to send email");
+        // this.loaderProvider.hide();
+        this.angularFireAuth.auth.signOut();
+        this.toasterProvider.show("회원가입 완료! 이메일 인증 후 로그인해주세요.", 3000, "center", false);
+        this.navCtrl.popToRoot();
       })
       .catch(error => {
         console.log(error);
+        // TODO: 회원 계정 삭제
+        this.toasterProvider.show("회원가입에 문제가 발생하였습니다. 잠시후 다시 시도해주세요.", 3000, "center", false);
       });
   }
 
   firebaseUpdateProfile() {
     let user = this.angularFireAuth.auth.currentUser;
-    user
-      .updateProfile({
-        displayName: this.user.name,
-        photoURL: ""
-      })
+    user.updateProfile({
+      displayName: this.user.name,
+      photoURL: ""
+    })
       .then(() => {
-        // Update successful.
         console.log("Update successful.");
         this.firebaseSendEmailVerification();
       })
       .catch(error => {
         console.log(error);
+        // TODO: 회원 계정 삭제
+        this.toasterProvider.show("회원가입에 문제가 발생하였습니다. 잠시후 다시 시도해주세요.", 3000, "center", false);
       });
   }
 }

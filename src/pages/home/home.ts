@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { Component, ChangeDetectorRef } from '@angular/core';
+import { NavController, Events } from 'ionic-angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { QuerySnapshot } from '@firebase/firestore-types';
+import { QuerySnapshot, Timestamp } from '@firebase/firestore-types';
 import { Todo } from '../../models/todo.model';
 import { LoaderProvider } from '../../providers/loader/loader';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'page-home',
@@ -15,30 +16,47 @@ export class HomePage {
   newText: string;
   todoList: Todo[];
 
-  constructor(public navCtrl: NavController, private angularFirestore: AngularFirestore, private angularFireAuth: AngularFireAuth, private loaderProvider: LoaderProvider) {
+  constructor(public navCtrl: NavController, private angularFirestore: AngularFirestore, private angularFireAuth: AngularFireAuth, private loaderProvider: LoaderProvider, private events: Events, private changeDetectorRef: ChangeDetectorRef) {
     this.todoList = [];
-    this.loaderProvider.show();
+    this.events.subscribe('sign', (user, status) => {
+      // this.loaderProvider.show();
+      console.log('sigin event handler');
+      if (status) {
+        console.log('user: ', user);
+        this.getTodoList(user);
+      }
+    });
   }
 
   ngOnInit(): void {
-    this.angularFirestore.collection("todos").ref.get().then(querySnapshot => {
-      console.log(querySnapshot);
+    
+  }
+
+  getTodoList(user: User) {
+    this.angularFirestore.collection("todos").ref.where("email", "==", user.email).get().then(querySnapshot => {
       querySnapshot.forEach(doc => {
-        console.log(`${doc.id} => ${doc.data()}`);
-        let tmp: Todo = {email: doc.data().email, done: doc.data().done, text: doc.data().text, isEditing: false};
-        this.todoList.push(tmp);
+        if (doc.exists) {
+          console.log(`${doc.id} => ${doc.data()}`);
+          let tmp: Todo = { id: doc.id, email: doc.data().email, done: doc.data().done, text: doc.data().text, isEditing: false, date: new Date() };
+          this.todoList.push(tmp);
+        }
+        else {
+          // TODO: 에러처리
+        }
       });
-      this.loaderProvider.hide();
+      // this.loaderProvider.hide();
     });
   }
 
   addTodo(newText) {
-    if(newText) {
+    if (newText) {
       let tmp = {
+        id: null,
         done: false,
         text: newText,
         isEditing: false,
         email: this.angularFireAuth.auth.currentUser.email,
+        date: new Date()
       };
       this.todoList.push(tmp);
       this.newText = '';
@@ -46,6 +64,7 @@ export class HomePage {
       this.angularFirestore.collection("todos").add(tmp)
         .then((docRef: any) => {
           console.log("Document written with ID: ", docRef.id);
+          this.todoList[this.todoList.length - 1].id = docRef.id;
         })
         .catch(error => {
           console.error("Error adding document: ", error);
@@ -56,20 +75,29 @@ export class HomePage {
   editTodo(i) {
     console.log('editTodo: ', this.todoList[i]);
     this.todoList[i].isEditing = true;
-
   }
 
   deleteTodo(i) {
     console.log('deleteTodo: ', this.todoList[i]);
     this.todoList.splice(i, 1);
-
-    // TODO: db에서 제거
+    this.angularFirestore.collection("todos").doc(this.todoList[i].id).delete()
+      .then(() => {
+        console.log("Document successfully deleted!");
+      })
+      .catch(error => {
+        console.error("Error delete document: ", error);
+      });
   }
 
   editComplete(i) {
-    console.log('before: ', this.todoList[i]);
+    console.log('editComplete: ', this.todoList[i]);
     this.todoList[i].isEditing = false;
-
-    // TODO: db에서 수정
+    this.angularFirestore.collection("todos").doc(this.todoList[i].id).update({ text: this.todoList[i].text })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch(error => {
+        console.error("Error update document: ", error);
+      });
   }
 }

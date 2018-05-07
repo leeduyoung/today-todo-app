@@ -18,6 +18,7 @@ import { SignupPage } from '../pages/sign/signup/signup';
 import { LoaderProvider } from '../providers/loader/loader';
 import { ToasterProvider } from '../providers/toaster/toaster';
 import { firebaseConfig } from '../config/config';
+import { GlobalsProvider } from '../providers/globals/globals';
 @NgModule({
   declarations: [
     MyApp,
@@ -55,7 +56,8 @@ import { firebaseConfig } from '../config/config';
     AppVersion,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     LoaderProvider,
-    ToasterProvider
+    ToasterProvider,
+    GlobalsProvider
   ]
 })
 export class AppModule {}
