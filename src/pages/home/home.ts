@@ -6,6 +6,7 @@ import { QuerySnapshot, Timestamp } from '@firebase/firestore-types';
 import { Todo } from '../../models/todo.model';
 import { LoaderProvider } from '../../providers/loader/loader';
 import { User } from '../../models/user.model';
+import { ToasterProvider } from '../../providers/toaster/toaster';
 
 @Component({
   selector: 'page-home',
@@ -16,27 +17,30 @@ export class HomePage {
   newText: string;
   todoList: Todo[];
 
-  constructor(public navCtrl: NavController, private angularFirestore: AngularFirestore, private angularFireAuth: AngularFireAuth, private loaderProvider: LoaderProvider, private events: Events, private changeDetectorRef: ChangeDetectorRef) {
+  constructor(public navCtrl: NavController, private angularFirestore: AngularFirestore, private angularFireAuth: AngularFireAuth, private loaderProvider: LoaderProvider, private events: Events, private ref: ChangeDetectorRef, private toasterProvider: ToasterProvider) {
     this.todoList = [];
+  }
+
+  ngOnInit(): void {
     this.events.subscribe('sign', (user, status) => {
       // this.loaderProvider.show();
-      console.log('sigin event handler');
       if (status) {
-        console.log('user: ', user);
         this.getTodoList(user);
+        this.toasterProvider.show(`${user.displayName}님, 반갑습니다. 오늘 하루도 보람찬 하루가 되길 기도합니다!`, 4000, 'center', false);
       }
     });
   }
 
-  ngOnInit(): void {
-    
+  ngOnDestroy(): void {
+    this.todoList = [];
+    this.newText = '';
   }
 
   getTodoList(user: User) {
     this.angularFirestore.collection("todos").ref.where("email", "==", user.email).get().then(querySnapshot => {
       querySnapshot.forEach(doc => {
         if (doc.exists) {
-          console.log(`${doc.id} => ${doc.data()}`);
+          // console.log(`${doc.id} => ${doc.data()}`);
           let tmp: Todo = { id: doc.id, email: doc.data().email, done: doc.data().done, text: doc.data().text, isEditing: false, date: new Date() };
           this.todoList.push(tmp);
         }
@@ -44,7 +48,7 @@ export class HomePage {
           // TODO: 에러처리
         }
       });
-      // this.loaderProvider.hide();
+      this.ref.detectChanges();
     });
   }
 
@@ -73,12 +77,10 @@ export class HomePage {
   }
 
   editTodo(i) {
-    console.log('editTodo: ', this.todoList[i]);
     this.todoList[i].isEditing = true;
   }
 
   deleteTodo(i) {
-    console.log('deleteTodo: ', this.todoList[i]);
     this.todoList.splice(i, 1);
     this.angularFirestore.collection("todos").doc(this.todoList[i].id).delete()
       .then(() => {
@@ -90,7 +92,6 @@ export class HomePage {
   }
 
   editComplete(i) {
-    console.log('editComplete: ', this.todoList[i]);
     this.todoList[i].isEditing = false;
     this.angularFirestore.collection("todos").doc(this.todoList[i].id).update({ text: this.todoList[i].text })
       .then(() => {

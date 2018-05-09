@@ -47,19 +47,16 @@ export class MyApp {
       // this.loaderProvider.show();
       this.angularFireAuth.auth.onAuthStateChanged(user => {
         if(user && user.emailVerified) { //signin
-          console.log('signin: ',user);
           this.events.publish('sign', user, true);
           this.globalsProvider.setSignStatus(true);
           this.globalsProvider.setUser({email: user.email, name: user.displayName, password: null});
-          this.rootPage = HomePage;
-          this.toasterProvider.show(`${user.displayName}님, 반갑습니다. 오늘 하루도 보람찬 하루가 되길 기도합니다!`, 4000, 'center', false);
+          this.nav.popToRoot();
         }
         else { //signout
-          console.log('signout');
           this.events.publish('sign', null, false);
           this.globalsProvider.setSignStatus(false);
           this.globalsProvider.setUser({email: '', name: '', password: ''});
-          this.rootPage = SigninPage;
+          this.nav.push(SigninPage);
         }
         // this.loaderProvider.hide();
       });

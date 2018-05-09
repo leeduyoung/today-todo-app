@@ -26,7 +26,12 @@ export class SigninPage {
     console.log("ionViewDidLoad SigninPage");
   }
 
+  ngOnDestroy() {
+    console.log('ngOnDestroy');
+  }
+
   ionViewDidLeave() {
+    console.log('ionViewDidLeave');
     this.user.email = '';
     this.user.name = '';
     this.user.password = '';
