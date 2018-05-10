@@ -8,7 +8,7 @@ import { GuidePage } from '../pages/guide/guide';
 import { SettingPage } from '../pages/setting/setting';
 import { SigninPage } from '../pages/sign/signin/signin';
 
-import { firebaseConfig } from '../config/config';
+// import { firebaseConfig } from '../config/config';
 import { ToasterProvider } from '../providers/toaster/toaster';
 import { LoaderProvider } from '../providers/loader/loader';
 import { AngularFireAuth } from 'angularfire2/auth';
