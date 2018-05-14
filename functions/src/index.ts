@@ -1,32 +1,33 @@
-import * as functions from 'firebase-functions';
+import * as functions from "firebase-functions";
+import * as admin from "firebase-admin";
+import { firebaseConfig } from "../../src/config/config";
+admin.initializeApp(firebaseConfig);
+const firestore = admin.firestore();
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
 export const helloWorld = functions.https.onRequest((request, response) => {
-    response.send("Hello from Firebase!");
+  console.log("called helloWorld function");
+  response.send("Hello from Firebase!");
 });
 
-export const deleteYesterdayTodos = functions.https.onRequest((request, response) => {
+/**
+ * 매일 00시 10분에 모든 유저의 어제할일을 삭제합니다.
+ */
+export const helloWorld2 = functions.https.onRequest((request, response) => {
     console.log("request: ", request);
     console.log("response: ", response);
 
-    // 매일 00시 10분에 모든 유저의 어제할일을 삭제합니다.
-    functions.firestore.document('todos').onDelete(querySnapshot => {
-        console.log(querySnapshot);
-        // querySnapshot.ref.
-    });
-
+    /**
+     * 1. 매일 00시 10분에 deleteYesterdayTodos 함수를 호출 합니다.
+     * 2. todos 도큐먼트를 조회 합니다.
+     * 3. 어제 날짜로 등록된 todos가 있다면 삭제 합니다.
+     */
+    firestore
+      .collection("todos")
+      .get()
+      .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {
+          // doc.data() is never undefined for query doc snapshots
+          console.log(doc.id, " => ", doc.data());
+        });
+      });
 });
-
-// export const test = functions.firestore.document('').onDelete(event => {
-
-//     // 매일 00시 10분에 모든 유저의 어제할일을 삭제합니다.
-
-// });
-
-// export const test2 = functions.firestore.document('').onCreate(event => {
-
-//     // 유저가 생성되면... ???
-// });
-
