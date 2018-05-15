@@ -10,24 +10,26 @@ exports.helloWorld = functions.https.onRequest((request, response) => {
     response.send("Hello from Firebase!");
 });
 /**
- * 매일 00시 10분에 모든 유저의 어제할일을 삭제합니다.
+ * 매일 00시 10분에 모든 유저의 어제할일(또는 과거할일)을 삭제합니다.
  */
-exports.helloWorld2 = functions.https.onRequest((request, response) => {
-    console.log("request: ", request);
-    console.log("response: ", response);
-    /**
-     * 1. 매일 00시 10분에 deleteYesterdayTodos 함수를 호출 합니다.
-     * 2. todos 도큐먼트를 조회 합니다.
-     * 3. 어제 날짜로 등록된 todos가 있다면 삭제 합니다.
-     */
+exports.deleteYesterdayTodos = functions.https.onRequest((request, response) => {
+    const currentDate = new Date();
     firestore
         .collection("todos")
         .get()
         .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-            // doc.data() is never undefined for query doc snapshots
             console.log(doc.id, " => ", doc.data());
+            if (doc.data().date.getDate() !== currentDate.getDate()) {
+                doc.ref.delete().then(() => {
+                    console.log('Document successfully deleted!');
+                })
+                    .catch(error => {
+                    console.log('erorr: ', error);
+                });
+            }
         });
     });
+    response.send("Success called deleteYesterdayTodos!");
 });
 //# sourceMappingURL=index.js.map
