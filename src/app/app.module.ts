@@ -15,10 +15,13 @@ import { GuidePage } from '../pages/guide/guide';
 import { SettingPage } from '../pages/setting/setting';
 import { SigninPage } from '../pages/sign/signin/signin';
 import { SignupPage } from '../pages/sign/signup/signup';
+import { TestPage } from '../pages/test/test';
+
 import { LoaderProvider } from '../providers/loader/loader';
 import { ToasterProvider } from '../providers/toaster/toaster';
 import { firebaseConfig } from '../config/config';
 import { GlobalsProvider } from '../providers/globals/globals';
+
 @NgModule({
   declarations: [
     MyApp,
@@ -26,7 +29,8 @@ import { GlobalsProvider } from '../providers/globals/globals';
     GuidePage,
     SettingPage,
     SigninPage,
-    SignupPage
+    SignupPage,
+    TestPage
   ],
   imports: [
     BrowserModule,
@@ -48,7 +52,8 @@ import { GlobalsProvider } from '../providers/globals/globals';
     GuidePage,
     SettingPage,
     SigninPage,
-    SignupPage
+    SignupPage,
+    TestPage
   ],
   providers: [
     StatusBar,

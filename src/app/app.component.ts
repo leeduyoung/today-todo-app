@@ -13,6 +13,7 @@ import { LoaderProvider } from '../providers/loader/loader';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { GlobalsProvider } from '../providers/globals/globals';
+import { TestPage } from '../pages/test/test';
 
 @Component({
   templateUrl: 'app.html'
@@ -31,7 +32,8 @@ export class MyApp {
     this.pages = [
       { title: '오늘 할일', component: HomePage },
       { title: '이용안내', component: GuidePage },
-      { title: '설정', component: SettingPage }
+      { title: '설정', component: SettingPage },
+      { title: '테스트', component: TestPage },
     ];
   }
 
