@@ -8,13 +8,11 @@ import { GuidePage } from '../pages/guide/guide';
 import { SettingPage } from '../pages/setting/setting';
 import { SigninPage } from '../pages/sign/signin/signin';
 
-// import { firebaseConfig } from '../config/config';
 import { ToasterProvider } from '../providers/toaster/toaster';
 import { LoaderProvider } from '../providers/loader/loader';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { GlobalsProvider } from '../providers/globals/globals';
-
 
 @Component({
   templateUrl: 'app.html'
@@ -70,17 +68,8 @@ export class MyApp {
 
   hardwareBackHandler() {
     this.platform.registerBackButtonAction(() => {
-      let activePortal = this.ionicApp._loadingPortal.getActive() || this.ionicApp._modalPortal.getActive() || this.ionicApp._toastPortal.getActive() || this.ionicApp._overlayPortal.getActive();
-      if (activePortal) {
-        this.ready = false;
-        activePortal.dismiss();
-        activePortal.onDidDismiss(() => { this.ready = true; });
-        return;
-      }
-
       let nav = this.app.getActiveNavs()[0];
       let currentPage = nav.getActive();
-
       if (nav.canGoBack()) {
         if(currentPage.instance instanceof SigninPage) {
           this.backAsExitApp();
@@ -95,10 +84,15 @@ export class MyApp {
   backAsExitApp() {
     if (!this.backExitFlag) {
       this.backExitFlag = true;
-      this.toasterProvider.show(`한번 더 누르면 앱을 종료합니다.`, `1500`, "bottom", false);
-      setTimeout(() => {
-        this.backExitFlag = false;
-      }, 1200);
+      this.toasterProvider.show(`한번 더 누르면 앱을 종료합니다.`, `1500`, "bottom", false)
+        .then(() => {
+          setTimeout(() => {
+            this.backExitFlag = false;
+          }, 1200);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     } else {
       this.platform.exitApp();
     }
