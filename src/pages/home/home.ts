@@ -7,6 +7,7 @@ import { Todo } from '../../models/todo.model';
 import { LoaderProvider } from '../../providers/loader/loader';
 import { User } from '../../models/user.model';
 import { ToasterProvider } from '../../providers/toaster/toaster';
+import { GlobalsProvider } from '../../providers/globals/globals';
 
 @Component({
   selector: 'page-home',
@@ -17,13 +18,10 @@ export class HomePage {
   newText: string;
   todoList: Todo[];
 
-  constructor(public navCtrl: NavController, private angularFirestore: AngularFirestore, private angularFireAuth: AngularFireAuth, private loaderProvider: LoaderProvider, private events: Events, private ref: ChangeDetectorRef, private toasterProvider: ToasterProvider) {
+  constructor(public navCtrl: NavController, private angularFirestore: AngularFirestore, private angularFireAuth: AngularFireAuth, private loaderProvider: LoaderProvider, private events: Events, private ref: ChangeDetectorRef, private toasterProvider: ToasterProvider, private globalProvider: GlobalsProvider) {
     this.todoList = [];
-  }
 
-  ngOnInit(): void {
     this.events.subscribe('sign', (user, status) => {
-      // this.loaderProvider.show();
       if (status) {
         this.getTodoList(user);
         this.toasterProvider.show(`${user.displayName}님, 반갑습니다. 오늘 하루도 보람찬 하루가 되길 기도합니다!`, 4000, 'center', false);
@@ -31,16 +29,23 @@ export class HomePage {
     });
   }
 
+  ngOnInit(): void {
+    if(this.angularFireAuth.auth.currentUser) {
+      this.getTodoList(this.angularFireAuth.auth.currentUser);
+    }
+  }
+
   ngOnDestroy(): void {
     this.todoList = [];
     this.newText = '';
   }
 
-  getTodoList(user: User) {
+  getTodoList(user: any) {
+    this.loaderProvider.show();
     this.angularFirestore.collection("todos").ref.where("email", "==", user.email).get().then(querySnapshot => {
       querySnapshot.forEach(doc => {
         if (doc.exists) {
-          // console.log(`${doc.id} => ${doc.data()}`);
+          console.log(`${doc.id} => ${doc.data()}`);
           let tmp: Todo = { id: doc.id, email: doc.data().email, done: doc.data().done, text: doc.data().text, isEditing: false, date: new Date() };
           this.todoList.push(tmp);
         }
@@ -49,6 +54,13 @@ export class HomePage {
         }
       });
       this.ref.detectChanges();
+    })
+    .then(() => {
+      console.log('this.todoList: ', this.todoList);
+      this.loaderProvider.hide();
+    })
+    .catch(error => {
+      console.log(error);
     });
   }
 
@@ -81,10 +93,12 @@ export class HomePage {
   }
 
   deleteTodo(i) {
-    this.todoList.splice(i, 1);
+    this.loaderProvider.show();
     this.angularFirestore.collection("todos").doc(this.todoList[i].id).delete()
       .then(() => {
         console.log("Document successfully deleted!");
+        this.todoList.splice(i, 1);
+        this.loaderProvider.hide();
       })
       .catch(error => {
         console.error("Error delete document: ", error);

@@ -35,3 +35,8 @@ Thumbs.db
 UserInterfaceState.xcuserstate
 
 config.ts
+
+### Firebase ###
+.idea
+**/node_modules/*
+**/.firebaserc

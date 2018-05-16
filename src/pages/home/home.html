@@ -9,26 +9,28 @@
 
 <ion-content padding class="home-content">
   <div class="todo-list-container">
-    <div class="add-todo">      
-      <input type="text" placeholder="New To Do" [(ngModel)]="newText" (keyup.enter)="addTodo(newText)">
+    <div class="add-todo">
+      <input type="text" placeholder="+ 오늘할일 추가" [(ngModel)]="newText" (keyup.enter)="addTodo(newText)">
       <hr>
     </div>
 
-    <div class="todo-item" *ngFor="let todo of todoList; let i = index;">
-      <input type="checkbox" id="todo+{{i}}" [checked]="todo.done">
-      <label *ngIf="!todo.isEditing" for="todo+{{i}}">{{todo?.text}}</label>
-      <input *ngIf="todo.isEditing" type="text" [(ngModel)]="todo.text">
+    <div class="item-list">
+      <div class="todo-item" *ngFor="let todo of todoList; let i = index;">
+        <input type="checkbox" id="todo+{{i}}" [checked]="todo.done">
+        <label *ngIf="!todo.isEditing" for="todo+{{i}}">{{todo?.text}}</label>
+        <input *ngIf="todo.isEditing" type="text" [(ngModel)]="todo.text">
 
-      <div class="handle-button">
-        <button *ngIf="!todo.isEditing" ion-button clear icon-only (click)="editTodo(i)">
-          <ion-icon class="edit" name="md-create"></ion-icon>
-        </button>
-        <button *ngIf="!todo.isEditing" ion-button clear icon-only (click)="deleteTodo(i)">
-          <ion-icon class="delete" name="trash"></ion-icon>
-        </button>
-        <button *ngIf="todo.isEditing" ion-button clear icon-only (click)="editComplete(i)">
-          <ion-icon class="complete" name="checkmark"></ion-icon>
-        </button>
+        <div class="handle-button">
+          <button *ngIf="!todo.isEditing" ion-button clear icon-only (click)="editTodo(i)">
+            <ion-icon class="edit" name="md-create"></ion-icon>
+          </button>
+          <button *ngIf="!todo.isEditing" ion-button clear icon-only (click)="deleteTodo(i)">
+            <ion-icon class="delete" name="trash"></ion-icon>
+          </button>
+          <button *ngIf="todo.isEditing" ion-button clear icon-only (click)="editComplete(i)">
+            <ion-icon class="complete" name="checkmark"></ion-icon>
+          </button>
+        </div>
       </div>
     </div>
   </div>

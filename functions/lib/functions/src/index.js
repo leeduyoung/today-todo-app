@@ -20,6 +20,9 @@ exports.deleteYesterdayTodos = functions.https.onRequest((request, response) => 
         .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
             console.log(doc.id, " => ", doc.data());
+            console.log(doc.data().date.getDate());
+            console.log(currentDate.getDate());
+            console.log(doc.data().date.getDate() !== currentDate.getDate());
             if (doc.data().date.getDate() !== currentDate.getDate()) {
                 doc.ref.delete().then(() => {
                     console.log('Document successfully deleted!');

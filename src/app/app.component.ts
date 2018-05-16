@@ -38,32 +38,29 @@ export class MyApp {
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      this.splashScreen.hide();
-      
+      this.splashScreen.hide();      
       this.hardwareBackHandler();
 
-      // this.loaderProvider.show();
       this.angularFireAuth.auth.onAuthStateChanged(user => {
-        if(user && user.emailVerified) { //signin
+        if(user && user.emailVerified) { //signin 상태
           this.events.publish('sign', user, true);
           this.globalsProvider.setSignStatus(true);
           this.globalsProvider.setUser({email: user.email, name: user.displayName, password: null});
           this.nav.popToRoot();
         }
-        else { //signout
+        else { //signout 상태
           this.events.publish('sign', null, false);
           this.globalsProvider.setSignStatus(false);
           this.globalsProvider.setUser({email: '', name: '', password: ''});
           this.nav.push(SigninPage);
         }
-        // this.loaderProvider.hide();
       });
-
     });
   }
 
   openPage(page) {
-    this.nav.setRoot(page.component);
+    if(this.nav.getActive().name !== page.component.name)
+      this.nav.setRoot(page.component);
   }
 
   hardwareBackHandler() {
