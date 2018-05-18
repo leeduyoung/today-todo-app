@@ -18,7 +18,7 @@
 
     <div class="todo-list">
       <div class="todo" *ngFor="let todo of todoList; let i = index;">
-        <input class="input-check" type="checkbox" id="todo-{{i}}" [checked]="todo.done">
+        <input class="input-check" type="checkbox" id="todo-{{i}}" [checked]="todo.done" (change)="todoDoneToggle(i)" [(ngModel)]="todo.done">
         <label class="input-label" *ngIf="!todo.isEditing" for="todo-{{i}}">{{todo?.text}}</label>
 
         <input class="input-text" *ngIf="todo.isEditing" type="text" [(ngModel)]="todo.text">
