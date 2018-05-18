@@ -8,13 +8,12 @@ import { GuidePage } from '../pages/guide/guide';
 import { SettingPage } from '../pages/setting/setting';
 import { SigninPage } from '../pages/sign/signin/signin';
 
-// import { firebaseConfig } from '../config/config';
 import { ToasterProvider } from '../providers/toaster/toaster';
 import { LoaderProvider } from '../providers/loader/loader';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { GlobalsProvider } from '../providers/globals/globals';
-
+import { TestPage } from '../pages/test/test';
 
 @Component({
   templateUrl: 'app.html'
@@ -33,54 +32,43 @@ export class MyApp {
     this.pages = [
       { title: '오늘 할일', component: HomePage },
       { title: '이용안내', component: GuidePage },
-      { title: '설정', component: SettingPage }
+      { title: '설정', component: SettingPage },
+      { title: '테스트', component: TestPage },
     ];
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
       this.statusBar.styleDefault();
-      this.splashScreen.hide();
-      
+      this.splashScreen.hide();      
       this.hardwareBackHandler();
 
-      // this.loaderProvider.show();
       this.angularFireAuth.auth.onAuthStateChanged(user => {
-        if(user && user.emailVerified) { //signin
+        if(user && user.emailVerified) { //signin 상태
           this.events.publish('sign', user, true);
           this.globalsProvider.setSignStatus(true);
           this.globalsProvider.setUser({email: user.email, name: user.displayName, password: null});
           this.nav.popToRoot();
         }
-        else { //signout
+        else { //signout 상태
           this.events.publish('sign', null, false);
           this.globalsProvider.setSignStatus(false);
           this.globalsProvider.setUser({email: '', name: '', password: ''});
           this.nav.push(SigninPage);
         }
-        // this.loaderProvider.hide();
       });
-
     });
   }
 
   openPage(page) {
-    this.nav.setRoot(page.component);
+    if(this.nav.getActive().name !== page.component.name)
+      this.nav.setRoot(page.component);
   }
 
   hardwareBackHandler() {
     this.platform.registerBackButtonAction(() => {
-      let activePortal = this.ionicApp._loadingPortal.getActive() || this.ionicApp._modalPortal.getActive() || this.ionicApp._toastPortal.getActive() || this.ionicApp._overlayPortal.getActive();
-      if (activePortal) {
-        this.ready = false;
-        activePortal.dismiss();
-        activePortal.onDidDismiss(() => { this.ready = true; });
-        return;
-      }
-
       let nav = this.app.getActiveNavs()[0];
       let currentPage = nav.getActive();
-
       if (nav.canGoBack()) {
         if(currentPage.instance instanceof SigninPage) {
           this.backAsExitApp();
@@ -95,10 +83,15 @@ export class MyApp {
   backAsExitApp() {
     if (!this.backExitFlag) {
       this.backExitFlag = true;
-      this.toasterProvider.show(`한번 더 누르면 앱을 종료합니다.`, `1500`, "bottom", false);
-      setTimeout(() => {
-        this.backExitFlag = false;
-      }, 1200);
+      this.toasterProvider.show(`한번 더 누르면 앱을 종료합니다.`, `1500`, "bottom", false)
+        .then(() => {
+          setTimeout(() => {
+            this.backExitFlag = false;
+          }, 1200);
+        })
+        .catch(error => {
+          console.log(error);
+        });
     } else {
       this.platform.exitApp();
     }

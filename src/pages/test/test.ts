@@ -10,10 +10,10 @@ import { ToasterProvider } from '../../providers/toaster/toaster';
 import { GlobalsProvider } from '../../providers/globals/globals';
 
 @Component({
-  selector: 'page-home',
-  templateUrl: 'home.html'
+  selector: 'page-test',
+  templateUrl: 'test.html',
 })
-export class HomePage {
+export class TestPage {
 
   newText: string;
   todoList: Todo[];
