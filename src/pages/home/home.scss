@@ -1,10 +1,9 @@
 page-home {
-
-    ion-content .scroll-content{
+    ion-content .scroll-content {
         overflow: hidden;
         padding-bottom: 0 !important;
         padding-top: 64px !important;
-   }
+    }
 
     .home-content {
         background-color: color($colors, main);
@@ -15,7 +14,7 @@ page-home {
             height: 100%;
             border-top-left-radius: 10px;
             border-top-right-radius: 10px;
-            
+
             hr {
                 height: 0.75px;
                 background-color: #bbb;
@@ -26,6 +25,7 @@ page-home {
                 position: relative;
                 z-index: 3;
                 height: 55px;
+
                 input {
                     width: 100%;
                     height: 100%;
@@ -35,112 +35,95 @@ page-home {
                 }
             }
 
-            .item-list {
-                padding-top: 55px;
-                margin-top: -55px;
-                width: 100%;
-                height: 100%;
-                min-height: 500px;
-                overflow-y: scroll;
+            .todo-list {
                 overflow-x: hidden;
+                overflow-y: scroll;
                 padding-bottom: 12px;
-            }
 
-            .todo-item {
-                position: relative;
-                height: 60px;
-                margin: 0 12px;
-                padding: 12px 75px 12px 6px;
-                border-bottom: 0.75px solid #bbb;
-                overflow: hidden;
-                white-space: nowrap;
-                text-overflow: ellipsis;
-
-                .todo-input-text {
-                    -webkit-appearance: none;
-                    -moz-appearance: none;
-                    appearance: none;
-
-                    // border: 0;
-                    border-radius: 15px;
-                    border: 1px dashed #BBB;
-                    padding: 10px;
-                    line-height: 20px;
-                    background: transparent;
-                    outline: none;  
-                }
-                .todo-input-label {
-                    vertical-align: super;
-                }
-
-                .todo-input-check {
+                .todo {
                     position: relative;
-                    border: 0;
-                    background: transparent;
-                    -moz-appearance: none;
-                    -ms-progress-appearance: none;
-                    -webkit-appearance: none;
-                    appearance: none;
-                    margin-right: 8px;
+                    width: 100%;
+                    height: 60px;
+                    border-bottom: 0.75px solid #bbb;
+                    padding-left: 9px;
+                    padding-right: 78px;
+                    display: flex;
+                    align-items: center;
+                    font-size: 16px;
 
-                    // position: absolute;
-                    // top: 50%;
-                    // transform: translateY(-50%);
-                }
-                .todo-input-check:before {
-                    content: "";
-                    display: inline-block;
-                    width: 24px;
-                    height: 24px;
-                    background-color: white;
-                    border-radius: 24px;
-                    border: 2px solid color($colors, main);;
-                }
-                .todo-input-check:checked:after {
-                    content: "\2713";
-                    display: inline-block;
-                    font-size: 18px;
-                    width: 24px;
-                    height: 24px;
-                    border-radius: 24px;
-                    position: absolute;
-                    top: 0;
-                    left: 0;
-                    border: 2px solid #bbb;
-                    text-align: center;
-                    color: #bbb;
-                }
-                .todo-input-check:checked + label {
-                    text-decoration: line-through;
-                    color: #bbb;
-                }
-                label input {
-                    overflow: hidden;
-                    white-space: nowrap;
-                    text-overflow: ellipsis;
-                    border: none;
-                }
-                
-                .handle-button {
-                    position: absolute;
-                    right: 9px;
-                    top: 16px;
-                    button {
-                        margin: 0;
-                        font-size: 12px;
-                        width: 30px;
-                        height: 30px;
+                    .input-text {
+                        -webkit-appearance: none;
+                        -moz-appearance: none;
+                        appearance: none;
+                        width: 100%;
+                        border-radius: 15px;
+                        border: 1px dashed #BBB;
+                        padding: 10px;
+                        line-height: 20px;
+                        background: transparent;
+                        outline: none;
                     }
-                    button.activated {
-                        ion-icon.edit, ion-icon.delete, ion-icon.complete {
-                            color: #bbb;
+
+                    input[type="checkbox"] { // 체크박스 없애기
+                        position: absolute;
+                        width: 1px;
+                        height: 1px;
+                        padding: 0;
+                        margin: -1px;
+                        overflow: hidden;
+                        clip: rect(0, 0, 0, 0);
+                        border: 0;
+                    }
+
+                    input[type="checkbox"] + label {
+                        display: inline-block;
+                        position: relative;
+                        cursor: pointer;
+                        user-select: none;
+                        -webkit-user-select: none;
+                        -moz-user-select: none;
+                        overflow: hidden;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                    }
+
+                    input[type="checkbox"] + label:before { // 가짜 체크박스 만들기
+                        content: ' ';
+                        display: inline-block;
+                        width: 24px;
+                        height: 24px;
+                        line-height: 24px;
+                        margin: 0 8px 0 0;
+                        text-align: center;
+                        vertical-align: middle;
+                        border: 1px solid #cacece;
+                        border-radius: 24px;
+                        border: 2px solid color($colors, main);
+                        background-color: white;
+                    }
+
+                    input[type="checkbox"] + label:active:before,
+                    input[type="checkbox"]:checked + label:active:before {
+                        box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.05), inset 0px 1px 3px rgba(0, 0, 0, 0.01);
+                    }
+
+                    input[type="checkbox"]:checked + label:before { // 체크박스 체크했을때
+                        content: '\2713';
+                        text-shadow: 1px 1px #fff;
+                        border: 2px solid #bbb;
+                        color: #bbb;
+                    }
+
+                    .button-container {
+                        position: absolute;
+                        right: 5px;
+
+                        button {
+                            font-size: 14px;
+                            width: 30px;
+                            height: 30px;
+                            color: rebeccapurple;
                         }
-                    }
-                    ion-icon.edit, ion-icon.delete, ion-icon.complete {
-                        color: rebeccapurple;
-                    }
-                    ion-icon.complete {
-                        font-size: 24px;
                     }
                 }
             }
