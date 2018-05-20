@@ -8,16 +8,37 @@
 </ion-header>
 
 <ion-content padding>
-  <ion-list>
-    <button ion-item *ngFor="let item of items" (click)="itemTapped($event, item)">
-      <ion-icon [name]="item.icon" item-start></ion-icon>
-      {{item.title}}
-      <div class="item-note" item-end>
-        {{item.note}}
-      </div>
-    </button>
-  </ion-list>
-  <div *ngIf="selectedItem" padding>
-    You navigated here from <b>{{selectedItem.title}}</b>
+
+  <div class="content intro">
+    <div class="title">
+      소개
+    </div>
+    <div class="description">
+      세상엔 세 종류의 일이 있습니다.
+      <br> ① 내가 할 일
+      <br> ② 네가 할 일
+      <br> ③ 하늘이 할 일
+      <br>
+      <br> 해야 할 일도 많고, 하고 싶은 일도 많은 오늘날…
+      <br> 우리는 내가 할 일에 집중해야 합니다.
+      <br> 이 앱은 내가 오늘 해야 할 일에 초점을 맞추고 선택과 집중할 수 있도록 도와주기 위해 만들어졌습니다.
+    </div>
   </div>
+
+  <div class="content usage">
+    <div class="title">
+      사용방법
+    </div>
+    <div class="description">
+      ① 매일 아침 9시에 알림이 울리면 앱에 접속해 오늘 할 일을 입력합니다. 
+      <br>② 매일 저녁 9시에 오늘 할 일 모두 마무리하지 못했다면 리마인드 알림이 울리게 되고,
+      <br>③ 모든 일을 완료했다면 축하 알림이 울리게 됩니다.
+      <br>④ 다음날이 되면, 어제 해야 했을 일은 모두 잊고 새롭게 시작하면 합니다. 
+      <br>
+      <br>오늘은 오늘이니깐요!
+      <br>
+      <br> 오늘 하루도 보람찬 하루가 되길 기도합니다. 😋
+    </div>
+  </div>
+
 </ion-content>
