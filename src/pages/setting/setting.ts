@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 import { AppVersion } from '@ionic-native/app-version';
 import { AlertController } from 'ionic-angular';
 import { AppVersionModel } from '../../models/app-version.model';
-// import * as firebase from 'firebase';
 import { LoaderProvider } from '../../providers/loader/loader';
 import { ToasterProvider } from '../../providers/toaster/toaster';
 import { AngularFireAuth } from 'angularfire2/auth';
@@ -14,26 +13,28 @@ import { AngularFireAuth } from 'angularfire2/auth';
 })
 export class SettingPage {
 
-  pushNotification: boolean;
+  pushNotification: boolean
+  signStatus: boolean;
+  appVersionNumber: string;
 
-  constructor(public navCtrl: NavController, public navParams: NavParams, private appVersion: AppVersion, private alertCtrl: AlertController, private loaderProvider: LoaderProvider, private toasterProvider: ToasterProvider, private angularFireAuth: AngularFireAuth) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private appVersion: AppVersion, private alertCtrl: AlertController, private loaderProvider: LoaderProvider, private toasterProvider: ToasterProvider, private angularFireAuth: AngularFireAuth, private events: Events
+  ) {
     this.pushNotification = false;
+
+    this.events.subscribe('sign', (user, status) => {
+      this.signStatus = status;
+    });
   }
 
   ngOnInit(): void {
+    if(this.angularFireAuth.auth.currentUser !== null) {
+      this.signStatus = true;
+    }
+
     let appVersionModel = new AppVersionModel();
-
-    this.appVersion.getVersionCode()
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-
     this.appVersion.getVersionNumber()
-      .then(response => {
-        console.log(response);
+      .then(version => {
+        this.appVersionNumber = version;
       })
       .catch(error => {
         console.log(error);
@@ -90,6 +91,20 @@ export class SettingPage {
     alert.present();
   }
 
+  preparePopup() {
+    let alert = this.alertCtrl.create({
+      title: '준비중',
+      message: '조금만 기다려주세요!',
+      buttons: [
+        {
+          text: '확인',
+          handler: () => { }
+        }
+      ]
+    });
+    alert.present();
+  }
+
   firebaseSignOut() {
     this.angularFireAuth.auth.signOut().then(() => {
       // Sign-out successful.
@@ -99,6 +114,10 @@ export class SettingPage {
       // this.loaderProvider.hide();
       this.toasterProvider.show(`오류가 발생하였습니다. 잠시후 다시 시도해주세요.(${error.code})`, 3000, 'center', false);
     });
+  }
+
+  openEmail() {
+    window.open('mailto:dmango.studio@gmail.com', '_system');
   }
 
 }

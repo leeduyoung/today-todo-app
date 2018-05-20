@@ -8,57 +8,39 @@
 </ion-header>
 
 <ion-content>
-  <div class="content">
-    <div class="item">
-      <span>버전정보</span>
-      <span class="align-right app-version">최신 버전
-        <span class="number">1.7.0</span>
-      </span>
+
+  <div class="item">
+    <div class="title">버전정보</div>
+    <div class="align-right" *ngIf="true">현재버전 {{appVersionNumber}}</div>
+    <!-- <div class="align-right" *ngIf="false">업데이트 필요 {{appVersionNumber}}</div> -->
+  </div>
+
+  <div class="item">
+    <div class="title">푸쉬 알림</div>
+    <div class="sub-title">오전, 오후 9시에 할일 체크 알림 허용</div>
+    <div class="align-right">
+      <label class="switch">
+        <input type="checkbox">
+        <span class="slider round"></span>
+      </label>
     </div>
   </div>
 
-  <div class="content">
-    <div class="item">
-      <span>푸쉬 알림</span>
-      <span class="align-right">
-        <ion-toggle color="main" [(ngModel)]="pepperoni"></ion-toggle>
-      </span>
-      <span class="align-bottom">
-        오전, 오후 9시에 할일 체크 알림 허용
-      </span>
-    </div>
-    <div class="item">
-      <span>공지사항</span>
-    </div>
+  <div class="item" (click)="openEmail()">
+    <div class="title">문의하기</div>
+    <div class="sub-title">불편 또는 개선사항을 알려주세요!</div>
   </div>
 
-  <div class="content">
-    <div class="item">
-      <span>이용약관</span>
-    </div>
-    <div class="item">
-      <span>개인정보 취급방침</span>
-    </div>
+  <div class="item" tappable (click)="preparePopup()">
+    <div class="title">이용약관</div>
   </div>
 
-  <div class="content">
-    <div class="item">
-      <span>문의하기</span>
-      <span class="align-bottom">불편 또는 개선사항을 말씀해주세요.</span>
-    </div>
+  <div class="item" tappable (click)="preparePopup()">
+    <div class="title">개인정보 취급방침</div>
   </div>
 
-  <div class="content">
-    <div tappable class="item" (click)="signout()">
-      <span>로그아웃</span>
-    </div>
+  <div class="item" *ngIf="signStatus" tappable (click)="signout()">
+    <div class="title">로그아웃</div>
   </div>
+
 </ion-content>
-
-<!-- 1. 로그아웃 -> 마지막
-2. 푸쉬 알림 토글
-3. 버전 정보 -> 1
-4. 공지사항 -> 2
-5. 이용약관
-6. 개인정보 취급방침
-7. 개발자에게 문의하기 -->
