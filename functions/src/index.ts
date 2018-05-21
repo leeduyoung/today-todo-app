@@ -1,11 +1,28 @@
 import * as functions from "firebase-functions";
 import * as admin from "firebase-admin";
 import { firebaseConfig } from "../../src/config/config";
+import * as moment from 'moment';
 admin.initializeApp(firebaseConfig);
 const firestore = admin.firestore();
 
 export const helloWorld = functions.https.onRequest((request, response) => {
-  console.log("called helloWorld function");
+  console.log("called helloWorld function: ", new Date());
+
+  firestore
+  .collection("todos")
+  .get()
+  .then(function(querySnapshot) {
+    querySnapshot.forEach(function(doc) {
+      console.log(doc.id, " => ", doc.data());
+      console.log('doc.data().date: ', doc.data().date);
+      console.log('doc.data().date.getDate(): ', doc.data().date.getDate());
+      console.log('doc.data().date.toString(): ',doc.data().date.toString());
+      
+      console.log('moment().add("hours", 9): ',moment().add('hours', 9));
+      console.log(moment(doc.data().date).add('hours', 9));
+    });
+  });
+  
   response.send("Hello from Firebase!");
 });
 
@@ -14,7 +31,7 @@ export const helloWorld = functions.https.onRequest((request, response) => {
  */
 export const deleteYesterdayTodos = functions.https.onRequest(
   (request, response) => {
-    const currentDate = new Date();
+    const currentDate = moment().add('hours', 9);
 
     firestore
       .collection("todos")
@@ -22,11 +39,11 @@ export const deleteYesterdayTodos = functions.https.onRequest(
       .then(function(querySnapshot) {
         querySnapshot.forEach(function(doc) {
           console.log(doc.id, " => ", doc.data());
-          console.log(doc.data().date.getDate());
-          console.log(currentDate.getDate());
-          console.log(doc.data().date.getDate() !== currentDate.getDate());
+          console.log(moment(doc.data().date));
+          console.log(currentDate);
+          console.log(moment(doc.data().date).add('hours', 9).date() !== currentDate.date());
 
-          if (doc.data().date.getDate() !== currentDate.getDate()) {
+          if (moment(doc.data().date).add('hours', 9).date() !== currentDate.date()) {
             doc.ref.delete().then(() => {
               console.log('Document successfully deleted!');
             })
