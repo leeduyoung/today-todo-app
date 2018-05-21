@@ -115,4 +115,15 @@ export class HomePage {
         console.error("Error update document: ", error);
       });
   }
+
+  todoDoneToggle(i) {
+    console.log('todoDone: ', this.todoList[i]);
+    this.angularFirestore.collection("todos").doc(this.todoList[i].id).update({ done: this.todoList[i].done })
+      .then(() => {
+        console.log("Document successfully updated!");
+      })
+      .catch(error => {
+        console.error("Error update document: ", error);
+      });    
+  }
 }

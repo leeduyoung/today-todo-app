@@ -8,30 +8,35 @@
 </ion-header>
 
 <ion-content padding class="home-content">
+
   <div class="todo-list-container">
+
     <div class="add-todo">
-      <input type="text" placeholder="+ 오늘할일 추가" [(ngModel)]="newText" (keyup.enter)="addTodo(newText)">
+      <input type="text" placeholder="새로운 할일 추가 :D" [(ngModel)]="newText" (keyup.enter)="addTodo(newText)">
       <hr>
     </div>
 
-    <div class="item-list">
-      <div class="todo-item" *ngFor="let todo of todoList; let i = index;">
-        <input class="todo-input-check" type="checkbox" id="todo+{{i}}" [checked]="todo.done">
-        <input class="todo-input-text" *ngIf="todo.isEditing" type="text" [(ngModel)]="todo.text">
-        <label class="todo-input-label" *ngIf="!todo.isEditing" for="todo+{{i}}">{{todo?.text}}</label>
+    <div class="todo-list">
+      <div class="todo" *ngFor="let todo of todoList; let i = index;">
+        <input class="input-check" type="checkbox" id="todo-{{i}}" [checked]="todo.done" (change)="todoDoneToggle(i)" [(ngModel)]="todo.done">
+        <label class="input-label" *ngIf="!todo.isEditing" for="todo-{{i}}">{{todo?.text}}</label>
 
-        <div class="handle-button">
+        <input class="input-text" *ngIf="todo.isEditing" type="text" [(ngModel)]="todo.text">
+
+        <div class="button-container">
           <button *ngIf="!todo.isEditing" ion-button clear icon-only (click)="editTodo(i)">
             <ion-icon class="edit" name="md-create"></ion-icon>
           </button>
           <button *ngIf="!todo.isEditing" ion-button clear icon-only (click)="deleteTodo(i)">
-            <ion-icon class="delete" name="trash"></ion-icon>
+            <ion-icon class="delete" name="md-trash"></ion-icon>
           </button>
           <button *ngIf="todo.isEditing" ion-button clear icon-only (click)="editComplete(i)">
-            <ion-icon class="complete" name="checkmark"></ion-icon>
+            <ion-icon class="complete" name="md-checkmark"></ion-icon>
           </button>
         </div>
       </div>
     </div>
+
   </div>
+
 </ion-content>
