@@ -50,13 +50,15 @@ export class MyApp {
           this.events.publish('sign', user, true);
           this.globalsProvider.setSignStatus(true);
           this.globalsProvider.setUser({email: user.email, name: user.displayName, password: null});
-          this.nav.popToRoot();
+          if(!(this.nav.getActive().instance instanceof HomePage))
+            this.nav.popToRoot();
         }
         else { //signout 상태
           this.events.publish('sign', null, false);
           this.globalsProvider.setSignStatus(false);
           this.globalsProvider.setUser({email: '', name: '', password: ''});
-          this.nav.push(SigninPage);
+          if(!(this.nav.getActive().instance instanceof SigninPage))
+            this.nav.push(SigninPage);
         }
       });
     });

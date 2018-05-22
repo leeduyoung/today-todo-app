@@ -29,7 +29,7 @@ export class SignupPage {
   }
 
   signup() {
-    // this.loaderProvider.show();
+    this.loaderProvider.show();
     this.angularFireAuth.auth
       .createUserWithEmailAndPassword(this.user.email, this.user.password)
       .then(response => {
@@ -54,7 +54,9 @@ export class SignupPage {
             errorMessage = "회원가입에 문제가 발생하였습니다. 잠시후 다시 시도해주세요.";
         }
         this.toasterProvider.show(errorMessage, 3000, "center", false);
-        // this.loaderProvider.hide();
+      })
+      .then(() => {
+        this.loaderProvider.hide();
       });
   }
 
@@ -77,10 +79,8 @@ export class SignupPage {
       .currentUser.sendEmailVerification()
       .then(() => {
         console.log("success to send email");
-        // this.loaderProvider.hide();
         this.angularFireAuth.auth.signOut();
         this.toasterProvider.show("회원가입 완료! 이메일 인증 후 로그인해주세요.", 3000, "center", false);
-        this.navCtrl.popToRoot();
       })
       .catch(error => {
         console.log(error);

@@ -11,15 +11,13 @@ export class LoaderProvider {
   }
 
   show() {
-    if (this.loading)
-      this.hide();
-
-    this.loading = this.loadingCtrl.create({
-      spinner: 'dots',
-      duration: 3000
-    });
-
-    this.loading.present();
+    if (!this.loading) {
+      this.loading = this.loadingCtrl.create({
+        spinner: 'dots',
+        duration: 3000
+      });
+      this.loading.present();
+    }
   }
 
   hide() {

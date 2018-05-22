@@ -38,21 +38,22 @@ export class SigninPage {
   }
 
   signin() {
-    // this.loaderProvider.show();
+    this.loaderProvider.show();
     this.angularFireAuth.auth
       .signInWithEmailAndPassword(this.user.email, this.user.password)
       .then(user => {
         console.log(user);
+        this.loaderProvider.hide();
         if (!user.emailVerified) {
           this.toasterProvider.show('이메일 인증 후 로그인해주세요.', 3000, 'center', false);
         }
         else {
           console.log('success to signin!');
         }
-        // this.loaderProvider.hide();
       })
       .catch(error => {
         console.log(error);
+        this.loaderProvider.hide();
         let errorCode = error.code;
         let errorMessage: string;
         switch (errorCode) {
@@ -71,7 +72,6 @@ export class SigninPage {
           default:
             errorMessage = '이메일 또는 비밀번호가 일치하지않습니다.';
         }
-        // this.loaderProvider.hide();
         this.toasterProvider.show(errorMessage, 3000, 'center', false);
       });
   }
@@ -79,18 +79,6 @@ export class SigninPage {
   goSignup() {
     console.log("goSignup");
     this.navCtrl.push(SignupPage);
-    // this.angularFirestore.collection("users")
-    //   .add({
-    //     email: 'leeduyoung2002@gmail.com',
-    //     name: '이두영',
-    //     password: '1234qwer'
-    //   })
-    //   .then((docRef: any) => {
-    //     console.log("Document written with ID: ", docRef.id);
-    //   })
-    //   .catch(error => {
-    //     console.error("Error adding document: ", error);
-    //   });
   }
 
   goResetPassword() {
