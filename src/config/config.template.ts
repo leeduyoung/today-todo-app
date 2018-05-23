@@ -5,3 +5,7 @@ export const firebaseConfig = {
     storageBucket: "<BUCKET>.appspot.com",
     messagingSenderId: "<SENDER_ID>",
 }
+
+export const onesignalConfig = {
+    appId: "<APP_ID>"
+}
