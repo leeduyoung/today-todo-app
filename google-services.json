@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "944951810488",
+    "firebase_url": "https://today-todo-app.firebaseio.com",
+    "project_id": "today-todo-app",
+    "storage_bucket": "today-todo-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944951810488:android:e975103af733982c",
+        "android_client_info": {
+          "package_name": "com.todaytodo.android"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944951810488-c53fru21ltrqltje8bli6gppth54sdab.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMyuHkmAjeKoCKYxAlZVPhTIVcqqwMvX8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

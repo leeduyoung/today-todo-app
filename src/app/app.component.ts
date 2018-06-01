@@ -15,6 +15,7 @@ import { AngularFireAuth } from 'angularfire2/auth';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { GlobalsProvider } from '../providers/globals/globals';
 import { TestPage } from '../pages/test/test';
+import { onesignalConfig } from '../config/config';
 
 @Component({
   templateUrl: 'app.html'
@@ -44,6 +45,16 @@ export class MyApp {
       this.splashScreen.hide();      
       this.hardwareBackHandler();
       moment.locale("ko");
+
+      var notificationOpenedCallback = function(jsonData) {
+        console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
+      };
+  
+      window["plugins"].OneSignal
+        // .startInit(onesignalConfig.appId, "YOUR_GOOGLE_PROJECT_NUMBER_IF_ANDROID")
+        .startInit(onesignalConfig.appId)
+        .handleNotificationOpened(notificationOpenedCallback)
+        .endInit();
 
       this.angularFireAuth.auth.onAuthStateChanged(user => {
         if(user && user.emailVerified) { //signin 상태
