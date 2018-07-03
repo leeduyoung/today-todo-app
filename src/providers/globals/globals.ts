@@ -6,6 +6,7 @@ export class GlobalsProvider {
 
   signStatus: boolean;
   user: User;
+  pushToken: string;
 
   constructor() {
     this.signStatus = false;
@@ -27,5 +28,12 @@ export class GlobalsProvider {
       this.user = new User();
 
     this.user = user;
+  }
+
+  getPushToken() {
+    return this.pushToken;
+  }
+  setPushToken(pushToken) {
+    this.pushToken = pushToken;
   }
 }

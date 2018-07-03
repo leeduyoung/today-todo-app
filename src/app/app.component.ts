@@ -55,10 +55,6 @@ export class MyApp {
           .startInit(onesignalConfig.appId)
           .handleNotificationOpened(notificationOpenedCallback)
           .endInit();
-
-        window["plugins"].OneSignal.getIds((ids) => {
-          console.log(ids);
-        });
       }
 
 
@@ -67,34 +63,7 @@ export class MyApp {
           this.events.publish('sign', user, true);
           this.globalsProvider.setSignStatus(true);
           this.globalsProvider.setUser({email: user.email, name: user.displayName, password: null});
-
-          // TODO: 유저 정보를 저장한다.
-          this.angularFirestore.collection("users").ref.doc(user.email).set({
-            pushToken: '123',
-            name: user.displayName,
-            date: new Date()
-          })
-          .then(() => {
-            console.log('성공.');
-          })
-          .catch(error => {
-            console.log('실패: ', error);
-          });
-
-          // let tmp = {
-          //   pushToken: '',
-          //   name: '',
-          //   email: this.angularFireAuth.auth.currentUser.email,
-          //   date: new Date()
-          // };
-          // this.angularFirestore.collection("users").add(tmp)
-          //   .then((docRef: any) => {
-          //     console.log("Document written with ID: ", docRef.id);
-          //   })
-          //   .catch(error => {
-          //     console.error("Error adding document: ", error);
-          //   });
-
+          this.updateUserPushToken(user);
           if(!(this.nav.getActive().instance instanceof HomePage))
             this.nav.popToRoot();
         }
@@ -107,6 +76,26 @@ export class MyApp {
         }
       });
     });
+  }
+
+  updateUserPushToken(user) {
+    if(!this.platform.is('core') && !this.platform.is('mobileweb')) {
+      window["plugins"].OneSignal.getIds((ids) => {
+        console.log(ids);
+        this.globalsProvider.setPushToken(ids.pushToken);
+        this.angularFirestore.collection("users").ref.doc(user.email).set({
+          pushToken: ids.pushToken,
+          name: user.displayName,
+          date: new Date()
+        })
+        .then(() => {
+          console.log('성공.');
+        })
+        .catch(error => {
+          console.log('실패: ', error);
+        });
+      });
+    }
   }
 
   openPage(page) {
