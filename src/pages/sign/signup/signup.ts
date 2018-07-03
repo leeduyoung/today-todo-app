@@ -5,7 +5,6 @@ import { User } from "../../../models/user.model";
 import { LoaderProvider } from "../../../providers/loader/loader";
 import { ToasterProvider } from "../../../providers/toaster/toaster";
 import { AngularFireAuth } from "angularfire2/auth";
-import { SigninPage } from "../signin/signin";
 
 @Component({
   selector: "page-signup",

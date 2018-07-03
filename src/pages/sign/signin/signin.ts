@@ -5,7 +5,6 @@ import { User } from "../../../models/user.model";
 
 import { ToasterProvider } from "../../../providers/toaster/toaster";
 import { LoaderProvider } from "../../../providers/loader/loader";
-import { HomePage } from "../../home/home";
 import { AngularFireAuth } from "angularfire2/auth";
 import { AngularFirestore, AngularFirestoreCollection } from "angularfire2/firestore";
 import { GlobalsProvider } from "../../../providers/globals/globals";

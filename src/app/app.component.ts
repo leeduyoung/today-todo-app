@@ -50,17 +50,20 @@ export class MyApp {
         console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
       };
   
-      window["plugins"].OneSignal
-        // .startInit(onesignalConfig.appId, "YOUR_GOOGLE_PROJECT_NUMBER_IF_ANDROID")
-        .startInit(onesignalConfig.appId)
-        .handleNotificationOpened(notificationOpenedCallback)
-        .endInit();
+      if(!this.platform.is('core') && !this.platform.is('mobileweb')) {
+        window["plugins"].OneSignal
+          .startInit(onesignalConfig.appId)
+          .handleNotificationOpened(notificationOpenedCallback)
+          .endInit();
+      }
+
 
       this.angularFireAuth.auth.onAuthStateChanged(user => {
         if(user && user.emailVerified) { //signin 상태
           this.events.publish('sign', user, true);
           this.globalsProvider.setSignStatus(true);
           this.globalsProvider.setUser({email: user.email, name: user.displayName, password: null});
+          this.updateUserPushToken(user);
           if(!(this.nav.getActive().instance instanceof HomePage))
             this.nav.popToRoot();
         }
@@ -73,6 +76,26 @@ export class MyApp {
         }
       });
     });
+  }
+
+  updateUserPushToken(user) {
+    if(!this.platform.is('core') && !this.platform.is('mobileweb')) {
+      window["plugins"].OneSignal.getIds((ids) => {
+        console.log(ids);
+        this.globalsProvider.setPushToken(ids.pushToken);
+        this.angularFirestore.collection("users").ref.doc(user.email).set({
+          pushToken: ids.pushToken,
+          name: user.displayName,
+          date: new Date()
+        })
+        .then(() => {
+          console.log('성공.');
+        })
+        .catch(error => {
+          console.log('실패: ', error);
+        });
+      });
+    }
   }
 
   openPage(page) {

@@ -2,10 +2,8 @@ import { Component, ChangeDetectorRef } from '@angular/core';
 import { NavController, Events } from 'ionic-angular';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { QuerySnapshot, Timestamp } from '@firebase/firestore-types';
 import { Todo } from '../../models/todo.model';
 import { LoaderProvider } from '../../providers/loader/loader';
-import { User } from '../../models/user.model';
 import { ToasterProvider } from '../../providers/toaster/toaster';
 import { GlobalsProvider } from '../../providers/globals/globals';
 
@@ -48,9 +46,6 @@ export class HomePage {
           console.log(`${doc.id} => ${doc.data()}`);
           let tmp: Todo = { id: doc.id, email: doc.data().email, done: doc.data().done, text: doc.data().text, isEditing: false, date: new Date() };
           this.todoList.push(tmp);
-        }
-        else {
-          // TODO: 에러처리
         }
       });
       this.ref.detectChanges();
