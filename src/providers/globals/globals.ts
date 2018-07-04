@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { User } from '../../models/user.model';
+import { OnesignalIds } from '../../models/onesignal-ids.model';
 
 @Injectable()
 export class GlobalsProvider {
 
   signStatus: boolean;
   user: User;
-  pushToken: string;
+  ids: OnesignalIds;
 
   constructor() {
     this.signStatus = false;
@@ -30,10 +31,10 @@ export class GlobalsProvider {
     this.user = user;
   }
 
-  getPushToken() {
-    return this.pushToken;
+  getIds() {
+    return this.ids;
   }
-  setPushToken(pushToken) {
-    this.pushToken = pushToken;
+  setIds(ids) {
+    this.ids = ids;
   }
 }

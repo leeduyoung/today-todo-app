@@ -82,9 +82,10 @@ export class MyApp {
     if(!this.platform.is('core') && !this.platform.is('mobileweb')) {
       window["plugins"].OneSignal.getIds((ids) => {
         console.log(ids);
-        this.globalsProvider.setPushToken(ids.pushToken);
+        this.globalsProvider.setIds(ids);
         this.angularFirestore.collection("users").ref.doc(user.email).set({
           pushToken: ids.pushToken,
+          userId: ids.userId,
           name: user.displayName,
           date: new Date()
         })
