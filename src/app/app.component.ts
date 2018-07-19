@@ -35,7 +35,7 @@ export class MyApp {
       { title: '오늘 할일', component: HomePage },
       { title: '이용안내', component: GuidePage },
       { title: '설정', component: SettingPage },
-      { title: '테스트', component: TestPage },
+      // { title: '테스트', component: TestPage },
     ];
   }
 
