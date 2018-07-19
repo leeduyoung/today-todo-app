@@ -7,5 +7,6 @@ export const firebaseConfig = {
 }
 
 export const onesignalConfig = {
-    appId: "<APP_ID>"
+    appId: "<APP_ID>",
+    restApiKey: "<REST_API_KEY>",
 }
